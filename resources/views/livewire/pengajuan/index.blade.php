@@ -74,6 +74,17 @@
                         @endif
                     </div>
 
+                        @if (($pengajuan->total_fee ?? 0) > 0 && $pengajuan->payment_status === 'pending')
+                            <div class="mt-3 flex flex-wrap gap-2">
+                                <flux:modal.trigger name="upload-payment-proof-{{ $pengajuan->id }}">
+                                    <flux:button variant="primary" icon="photo" wire:click="showPaymentProofForm({{ $pengajuan->id }})">
+                                        {{('Sudah Bayar') }}
+                                    </flux:button>
+                                </flux:modal.trigger>
+                            </div>
+                        @endif
+                    </div>
+
                     <div class="flex items-center gap-3">
                         <flux:button
                             variant="outline"
@@ -85,6 +96,50 @@
                         </flux:button>
                     </div>
                 </div>
+
+                <flux:modal name="upload-payment-proof-{{ $pengajuan->id }}" separator>
+                    <form wire:submit.prevent="submitPaymentProof" class="space-y-4">
+                        <flux:heading size="lg">{{ __('Unggah Bukti Pembayaran') }}</flux:heading>
+                        <flux:text class="text-sm text-zinc-500 dark:text-zinc-300">
+                            {{ __('Unggah foto bukti transfer yang jelas. Format yang diterima: JPG, PNG (maks 5 MB).') }}
+                        </flux:text>
+
+                        <div class="space-y-3">
+                            <flux:input
+                                wire:model="paymentProofFile"
+                                label="{{ __('Foto Bukti Pembayaran') }}"
+                                type="file"
+                                accept="image/*"
+                                required
+                            />
+
+                            <flux:textarea
+                                wire:model.defer="paymentProofNote"
+                                label="{{ __('Catatan Tambahan (opsional)') }}"
+                                rows="3"
+                                placeholder="{{ __('Contoh: Sudah transfer via mobile banking') }}"
+                            />
+                        </div>
+
+                        <div class="flex flex-wrap justify-end gap-2">
+                            <flux:modal.close>
+                                <flux:button variant="ghost" type="button" wire:click="cancelPaymentProof">
+                                    {{ __('Batal') }}
+                                </flux:button>
+                            </flux:modal.close>
+
+                            <flux:button
+                                variant="primary"
+                                type="submit"
+                                icon="paper-airplane"
+                                wire:loading.attr="disabled"
+                                wire:target="paymentProofFile, submitPaymentProof"
+                            >
+                                {{ __('Kirim Bukti Pembayaran') }}
+                            </flux:button>
+                        </div>
+                    </form>
+                </flux:modal>
             </div>
         @empty
             <flux:callout

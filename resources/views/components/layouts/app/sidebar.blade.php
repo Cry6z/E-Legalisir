@@ -16,7 +16,7 @@
                 <header class="flex flex-wrap items-center justify-between gap-4">
                     <a href="{{ route('pengajuan.index') }}" class="flex items-center gap-3 font-semibold" wire:navigate>
                         <x-app-logo-icon class="h-7 fill-current text-black dark:text-white" />
-                        <span>{{ __('e-Legalisir UMB') }}</span>
+                        <span>{{ __('E-Legalisir') }}</span>
                     </a>
 
                     <div class="flex flex-wrap items-center gap-3 text-sm">

@@ -15,12 +15,28 @@ class Index extends Component
 {
     public array $fees = [];
 
+    public string $viewTab = 'active';
+
     public function getPengajuansProperty()
     {
         return Pengajuan::query()
             ->with(['status', 'user'])
             ->latest()
             ->get();
+    }
+
+    public function getActivePengajuansProperty()
+    {
+        return $this->pengajuans->filter(function (Pengajuan $pengajuan) {
+            return ! in_array($pengajuan->status?->code, ['DISETUJUI', 'DITOLAK', 'SELESAI'], true);
+        });
+    }
+
+    public function getHistoryPengajuansProperty()
+    {
+        return $this->pengajuans->filter(function (Pengajuan $pengajuan) {
+            return in_array($pengajuan->status?->code, ['DISETUJUI', 'DITOLAK', 'SELESAI'], true);
+        });
     }
 
     public function getStatusSummaryProperty()
@@ -30,6 +46,15 @@ class Index extends Component
             ->withCount('pengajuans')
             ->orderBy('sort_order')
             ->get();
+    }
+
+    public function setViewTab(string $tab): void
+    {
+        if (! in_array($tab, ['active', 'history'], true)) {
+            return;
+        }
+
+        $this->viewTab = $tab;
     }
 
     public function ensureFeeState(Pengajuan $pengajuan): void
@@ -138,6 +163,12 @@ class Index extends Component
         abort_unless(in_array(auth()->user()->role, ['staf', 'superadmin'], true), 403);
 
         $pengajuan = Pengajuan::query()->findOrFail($pengajuanId);
+
+        if (! $pengajuan->payment_proof_path) {
+            session()->flash('status', 'Tidak dapat mengonfirmasi pembayaran karena bukti belum diunggah oleh alumni.');
+
+            return;
+        }
 
         $pengajuan->update([
             'payment_status' => 'paid',

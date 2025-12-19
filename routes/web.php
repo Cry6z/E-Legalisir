@@ -42,7 +42,7 @@ Route::get('dashboard', function () {
     }
 
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
@@ -70,32 +70,16 @@ Route::middleware(['auth'])->group(function () {
         )
         ->name('two-factor.show');
 
-    Route::middleware(['verified'])->group(function () {
-        Route::middleware(['role:alumni'])->group(function () {
-            Route::get('pengajuan', PengajuanIndex::class)->name('pengajuan.index');
-            Route::get('pengajuan/create', PengajuanCreate::class)->name('pengajuan.create');
-        });
-
-        Route::middleware(['role:staf,dekan'])->group(function () {
-            Route::get('admin/pengajuan', AdminPengajuanIndex::class)->name('admin.pengajuan.index');
-        });
-
-        Route::middleware(['role:superadmin'])->group(function () {
-            Route::get('superadmin/dashboard', SuperadminDashboard::class)->name('superadmin.dashboard');
-            Route::get('superadmin/roles', SuperadminRoleManagement::class)->name('superadmin.roles');
-        });
-    });
-
-    Route::middleware(['verified', 'role:alumni'])->group(function () {
+    Route::middleware(['role:alumni'])->group(function () {
         Route::get('pengajuan', PengajuanIndex::class)->name('pengajuan.index');
         Route::get('pengajuan/create', PengajuanCreate::class)->name('pengajuan.create');
     });
 
-    Route::middleware(['verified', 'role:staf,dekan,superadmin'])->group(function () {
+    Route::middleware(['role:staf,dekan,superadmin'])->group(function () {
         Route::get('admin/pengajuan', AdminPengajuanIndex::class)->name('admin.pengajuan.index');
     });
 
-    Route::middleware(['verified', 'role:superadmin'])->group(function () {
+    Route::middleware(['role:superadmin'])->group(function () {
         Route::get('superadmin/dashboard', SuperadminDashboard::class)->name('superadmin.dashboard');
         Route::get('superadmin/roles', SuperadminRoleManagement::class)->name('superadmin.roles');
     });
