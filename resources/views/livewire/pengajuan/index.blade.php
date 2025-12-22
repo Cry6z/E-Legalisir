@@ -42,14 +42,21 @@
         </div>
     @endif
 
-    <div class="space-y-3">
+    <div class="space-y-4">
         @forelse ($this->pengajuans as $pengajuan)
-            <div class="rounded-xl border border-zinc-200 bg-white p-4 shadow-xs dark:border-zinc-700 dark:bg-zinc-900">
-                <div class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-                    <div class="space-y-1">
-                        <div class="flex items-center gap-2">
+            <div class="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                    <div class="space-y-2">
+                        @php
+                            $statusColor = match ($pengajuan->status?->code) {
+                                'DISETUJUI' => 'emerald',
+                                'DITOLAK' => 'rose',
+                                default => 'zinc',
+                            };
+                        @endphp
+                        <div class="flex flex-wrap items-center gap-2">
                             <flux:heading size="lg">{{ $pengajuan->kode }}</flux:heading>
-                            <flux:badge color="zinc">{{ $pengajuan->status?->name }}</flux:badge>
+                            <flux:badge color="{{ $statusColor }}">{{ $pengajuan->status?->name }}</flux:badge>
                         </div>
                         <flux:text class="text-sm">{{ $pengajuan->jenis_dokumen }} • {{ __('Jumlah') }}: {{ $pengajuan->jumlah }}</flux:text>
                         <flux:text class="text-xs text-zinc-500">{{ $pengajuan->created_at?->format('d/m/Y H:i') }}</flux:text>
@@ -74,18 +81,7 @@
                         @endif
                     </div>
 
-                        @if (($pengajuan->total_fee ?? 0) > 0 && $pengajuan->payment_status === 'pending')
-                            <div class="mt-3 flex flex-wrap gap-2">
-                                <flux:modal.trigger name="upload-payment-proof-{{ $pengajuan->id }}">
-                                    <flux:button variant="primary" icon="photo" wire:click="showPaymentProofForm({{ $pengajuan->id }})">
-                                        {{('Sudah Bayar') }}
-                                    </flux:button>
-                                </flux:modal.trigger>
-                            </div>
-                        @endif
-                    </div>
-
-                    <div class="flex items-center gap-3">
+                    <div class="flex flex-wrap items-center gap-2 lg:justify-end">
                         <flux:button
                             variant="outline"
                             icon="document-arrow-down"
@@ -94,6 +90,14 @@
                         >
                             {{ __('Lihat File') }}
                         </flux:button>
+
+                        @if (($pengajuan->total_fee ?? 0) > 0 && $pengajuan->payment_status === 'pending')
+                            <flux:modal.trigger name="upload-payment-proof-{{ $pengajuan->id }}">
+                                <flux:button variant="primary" icon="photo" wire:click="showPaymentProofForm({{ $pengajuan->id }})">
+                                    {{ __('Sudah Bayar') }}
+                                </flux:button>
+                            </flux:modal.trigger>
+                        @endif
                     </div>
                 </div>
 
@@ -146,7 +150,7 @@
                 variant="secondary"
                 icon="document"
                 heading="{{ __('Belum ada pengajuan') }}"
-                text="{{ __('Silakan buat pengajuan legalisir pertama kamu.') }}"
+                text="{{ __('Silahkan buat pengajuan legalisir pertama kamu.') }}"
             />
         @endforelse
     </div>

@@ -114,20 +114,11 @@
                 {{ __('Lihat Dokumen') }}
             </flux:button>
 
-            @if (auth()->user()->role === 'staf')
+            @if (auth()->user()->role === 'dekan')
                 <flux:button variant="primary" icon="check" wire:click="setStatus({{ $pengajuan->id }}, 'DIVERIFIKASI')">
                     {{ __('Verifikasi') }}
                 </flux:button>
-                <flux:button variant="outline" icon="check-badge" wire:click="setStatus({{ $pengajuan->id }}, 'SELESAI')">
-                    {{ __('Selesai') }}
-                </flux:button>
-                <flux:button variant="danger" icon="x-mark" wire:click="setStatus({{ $pengajuan->id }}, 'DITOLAK')">
-                    {{ __('Tolak') }}
-                </flux:button>
-            @endif
-
-            @if (auth()->user()->role === 'dekan')
-                <flux:button variant="primary" icon="check-badge" wire:click="setStatus({{ $pengajuan->id }}, 'DISETUJUI')">
+                <flux:button variant="outline" icon="check-badge" wire:click="setStatus({{ $pengajuan->id }}, 'DISETUJUI')">
                     {{ __('Setujui') }}
                 </flux:button>
                 <flux:button variant="danger" icon="x-mark" wire:click="setStatus({{ $pengajuan->id }}, 'DITOLAK')">

@@ -76,8 +76,8 @@ class Index extends Component
         $user = auth()->user();
 
         $allowedByRole = match ($user->role) {
-            'staf' => in_array($statusCode, ['DIVERIFIKASI', 'DITOLAK', 'SELESAI'], true),
-            'dekan' => in_array($statusCode, ['DISETUJUI', 'DITOLAK'], true),
+            'staf' => false,
+            'dekan' => in_array($statusCode, ['DIVERIFIKASI', 'DISETUJUI', 'DITOLAK'], true),
             'superadmin' => in_array($statusCode, ['DIAJUKAN', 'DIVERIFIKASI', 'DISETUJUI', 'DITOLAK', 'SELESAI'], true),
             default => false,
         };

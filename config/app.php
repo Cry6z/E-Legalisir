@@ -124,7 +124,7 @@ return [
 
     'payment_account_note' => env(
         'PAYMENT_ACCOUNT_NOTE',
-        'Biaya legalisir dibayarkan melalui rekening resmi Bank BNI 123456789 a.n. Fakultas Teknik Universitas Negeri Jakarta. Sertakan bukti transfer yang jelas.'
+        'Biaya legalisir dibayarkan melalui rekening resmi Bank BNI 123456789 a.n. Universitas Muhammadiyah Bengkulu. Sertakan bukti transfer yang jelas.'
     ),
 
 ];
