@@ -30,6 +30,9 @@ class Pengajuan extends Model
         'approved_by',
         'approved_at',
         'signed_pdf_path',
+        'shipping_receipt_number',
+        'shipping_receipt_path',
+        'shipping_sent_at',
         'verification_token',
     ];
 
@@ -39,6 +42,7 @@ class Pengajuan extends Model
             'validated_at' => 'datetime',
             'approved_at' => 'datetime',
             'payment_confirmed_at' => 'datetime',
+            'shipping_sent_at' => 'datetime',
         ];
     }
 

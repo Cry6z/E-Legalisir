@@ -65,18 +65,58 @@
                             <flux:text class="text-sm">{{ $pengajuan->catatan }}</flux:text>
                         @endif
 
-                        @if (($pengajuan->total_fee ?? 0) > 0 && $pengajuan->payment_status === 'pending')
-                            <div class="mt-2 rounded-lg border border-dashed border-amber-300 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-500/60 dark:bg-amber-500/10 dark:text-amber-100">
+                        @if (($pengajuan->total_fee ?? 0) > 0)
+                            <div
+                                @class([
+                                    'mt-2 rounded-lg p-3 text-sm',
+                                    'border border-dashed border-amber-300 bg-amber-50 text-amber-900 dark:border-amber-500/60 dark:bg-amber-500/10 dark:text-amber-100' => $pengajuan->payment_status === 'pending',
+                                    'border border-emerald-300 bg-emerald-50 text-emerald-900 dark:border-emerald-500/60 dark:bg-emerald-500/10 dark:text-emerald-100' => $pengajuan->payment_status !== 'pending',
+                                ])
+                            >
                                 <div class="flex items-center gap-2">
-                                    <flux:icon name="banknotes" class="h-4 w-4" />
-                                    <span class="font-medium">{{ __('Menunggu Pembayaran') }}</span>
+                                    <flux:icon
+                                        name="{{ $pengajuan->payment_status === 'pending' ? 'banknotes' : 'check-circle' }}"
+                                        class="h-4 w-4"
+                                    />
+                                    <span class="font-medium">
+                                        {{ $pengajuan->payment_status === 'pending' ? __('Menunggu Pembayaran') : __('Bukti Pembayaran Diterima') }}
+                                    </span>
                                 </div>
                                 <div class="mt-1 font-semibold">
                                     Rp {{ number_format($pengajuan->total_fee ?? 0, 0, ',', '.') }}
                                 </div>
                                 <p class="mt-1 text-xs leading-relaxed">
-                                    {{ config('app.payment_account_note') }}
+                                    {{ $pengajuan->payment_status === 'pending'
+                                        ? config('app.payment_account_note')
+                                        : __('Tim sedang memverifikasi. Kamu akan mendapat notifikasi setelah pembayaran disetujui.') }}
                                 </p>
+                            </div>
+                        @endif
+
+                        @if ($pengajuan->shipping_receipt_number)
+                            <div class="mt-3 rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-sm dark:border-zinc-800 dark:bg-zinc-900/40">
+                                <div class="flex flex-wrap items-center justify-between gap-3">
+                                    <div>
+                                        <p class="font-semibold">{{ __('Resi Pengiriman') }}</p>
+                                        <p>{{ $pengajuan->shipping_receipt_number }}</p>
+                                        @if ($pengajuan->shipping_sent_at)
+                                            <p class="text-xs text-zinc-500">
+                                                {{ __('Dikirim pada :date', ['date' => $pengajuan->shipping_sent_at->format('d M Y, H:i')]) }}
+                                            </p>
+                                        @endif
+                                    </div>
+
+                                    @if ($pengajuan->shipping_receipt_path)
+                                        <flux:button
+                                            variant="outline"
+                                            icon="truck"
+                                            :href="\Illuminate\Support\Facades\Storage::disk('public')->url($pengajuan->shipping_receipt_path)"
+                                            target="_blank"
+                                        >
+                                            {{ __('Lihat Lampiran Resi') }}
+                                        </flux:button>
+                                    @endif
+                                </div>
                             </div>
                         @endif
                     </div>

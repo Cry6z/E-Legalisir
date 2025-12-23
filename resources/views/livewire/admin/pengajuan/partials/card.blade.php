@@ -104,6 +104,76 @@
             @endif
         </div>
 
+        @if (in_array(auth()->user()->role, ['staf', 'superadmin'], true))
+            @php($this->ensureShippingState($pengajuan))
+            <div class="rounded-2xl border border-dashed border-zinc-200 bg-white/50 p-4 text-sm dark:border-zinc-700 dark:bg-zinc-900/40">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <flux:text class="text-xs uppercase tracking-wide text-zinc-500">{{ __('Pengiriman Dokumen') }}</flux:text>
+                        @if ($pengajuan->shipping_receipt_number)
+                            <p class="text-sm font-semibold">
+                                {{ __('Nomor Resi: :resi', ['resi' => $pengajuan->shipping_receipt_number]) }}
+                            </p>
+                            @if ($pengajuan->shipping_sent_at)
+                                <p class="text-xs text-zinc-500">
+                                    {{ __('Dikirim pada :date', ['date' => $pengajuan->shipping_sent_at->format('d M Y, H:i')]) }}
+                                </p>
+                            @endif
+                        @else
+                            <p class="text-sm text-zinc-500">
+                                {{ __('Kirimkan nomor resi agar alumni dapat melacak pengiriman.') }}
+                            </p>
+                        @endif
+                    </div>
+
+                    @if ($pengajuan->shipping_receipt_path)
+                        <flux:button
+                            variant="outline"
+                            icon="arrow-top-right-on-square"
+                            :href="\Illuminate\Support\Facades\Storage::disk('public')->url($pengajuan->shipping_receipt_path)"
+                            target="_blank"
+                        >
+                            {{ __('Lihat Lampiran Resi') }}
+                        </flux:button>
+                    @endif
+                </div>
+
+                @php($canSendResi = in_array($pengajuan->status?->code, ['DISETUJUI', 'SELESAI'], true))
+                <div class="mt-4 grid gap-3 md:grid-cols-2">
+                    <flux:input
+                        label="{{ __('Nomor Resi') }}"
+                        wire:model.defer="shippingReceipts.{{ $pengajuan->id }}.number"
+                        placeholder="Contoh: JNE123456789"
+                    />
+                    <flux:input
+                        type="file"
+                        label="{{ __('Lampiran Resi (JPG/PNG/PDF, maks 5MB)') }}"
+                        wire:model="shippingReceiptUploads.{{ $pengajuan->id }}"
+                        accept=".jpg,.jpeg,.png,.pdf"
+                    />
+                </div>
+
+                <div class="mt-3 flex flex-wrap gap-2">
+                    <flux:button
+                        variant="primary"
+                        icon="paper-airplane"
+                        wire:click="uploadShippingReceipt({{ $pengajuan->id }})"
+                        wire:target="shippingReceiptUploads.{{ $pengajuan->id }}, uploadShippingReceipt"
+                        wire:loading.attr="disabled"
+                        :disabled="! $canSendResi"
+                    >
+                        {{ __('Kirim Resi ke Alumni') }}
+                    </flux:button>
+
+                    @unless ($canSendResi)
+                        <flux:button variant="outline" disabled>
+                            {{ __('Menunggu persetujuan dekan') }}
+                        </flux:button>
+                    @endunless
+                </div>
+            </div>
+        @endif
+
         <div class="flex flex-wrap items-center gap-2">
             <flux:button
                 variant="outline"
@@ -113,6 +183,18 @@
             >
                 {{ __('Lihat Dokumen') }}
             </flux:button>
+
+            @if ($pengajuan->shipping_receipt_number)
+                <flux:button
+                    variant="ghost"
+                    icon="truck"
+                    :href="$pengajuan->shipping_receipt_path ? \Illuminate\Support\Facades\Storage::disk('public')->url($pengajuan->shipping_receipt_path) : null"
+                    target="_blank"
+                    :disabled="! $pengajuan->shipping_receipt_path"
+                >
+                    {{ __('Resi: ') }}{{ $pengajuan->shipping_receipt_number }}
+                </flux:button>
+            @endif
 
             @if (auth()->user()->role === 'dekan')
                 <flux:button variant="primary" icon="check" wire:click="setStatus({{ $pengajuan->id }}, 'DIVERIFIKASI')">

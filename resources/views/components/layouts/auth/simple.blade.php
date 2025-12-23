@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         @include('partials.head')
     </head>
@@ -12,6 +12,7 @@
                     </span>
                     <span class="sr-only">{{ config('app.name', 'E-Legalisir') }}</span>
                 </a>
+
                 <div class="flex flex-col gap-6">
                     {{ $slot }}
                 </div>

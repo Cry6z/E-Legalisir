@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         @include('partials.head')
     </head>
@@ -13,6 +13,8 @@
 
                     <span class="sr-only">{{ config('app.name', 'E-Legalisir') }}</span>
                 </a>
+
+                <x-theme-toggle class="mx-auto w-full justify-center border border-transparent bg-white/80 dark:bg-zinc-800/60" />
 
                 <div class="flex flex-col gap-6">
                     <div class="rounded-xl border bg-white dark:bg-stone-950 dark:border-stone-800 text-stone-800 shadow-xs">

@@ -1,14 +1,14 @@
 <?php
 
-use App\Livewire\Settings\Appearance;
-use App\Livewire\Settings\Password;
-use App\Livewire\Settings\Profile;
-use App\Livewire\Settings\TwoFactor;
 use App\Livewire\Pengajuan\Create as PengajuanCreate;
 use App\Livewire\Pengajuan\Index as PengajuanIndex;
 use App\Livewire\Admin\Pengajuan\Index as AdminPengajuanIndex;
 use App\Livewire\Superadmin\Dashboard as SuperadminDashboard;
 use App\Livewire\Superadmin\RoleManagement as SuperadminRoleManagement;
+use App\Livewire\Settings\Appearance;
+use App\Livewire\Settings\Password;
+use App\Livewire\Settings\Profile;
+use App\Livewire\Settings\TwoFactor;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 

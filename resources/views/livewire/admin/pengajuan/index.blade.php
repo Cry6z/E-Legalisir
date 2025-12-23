@@ -32,10 +32,12 @@
         <div class="flex flex-wrap items-center justify-between gap-3">
             <div>
                 <flux:heading size="lg">{{ __('Manajemen Status') }}</flux:heading>
-                <flux:text class="text-sm text-zinc-500">{{ __('Pilih daftar pengajuan yang ingin ditinjau') }}</flux:text>
+                <flux:text class="text-sm text-zinc-500">
+                    {{ __('Gunakan tab untuk berpindah antara pengajuan aktif dan riwayat.') }}
+                </flux:text>
             </div>
 
-            <div class="flex gap-2">
+            <div class="flex gap-2 flex-wrap">
                 <flux:button
                     variant="{{ $this->viewTab === 'active' ? 'primary' : 'ghost' }}"
                     icon="arrow-path"
@@ -69,7 +71,19 @@
                 @endforelse
             </div>
         @else
-            <div class="space-y-3">
+            <div class="space-y-4">
+                <div class="rounded-2xl border border-zinc-200/60 bg-white/70 p-3 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/40">
+                    <p class="text-sm font-semibold">{{ __('Cari Pengajuan Riwayat') }}</p>
+                    <p class="text-xs text-zinc-500">{{ __('Gunakan nama, kode, atau jenis dokumen alumni') }}</p>
+
+                    <flux:input
+                        icon="magnifying-glass"
+                        placeholder="{{ __('Cari riwayat...') }}"
+                        class="mt-2 w-full"
+                        wire:model.debounce.500ms="historySearch"
+                    />
+                </div>
+
                 @forelse ($this->historyPengajuans as $pengajuan)
                     <div wire:key="history-{{ $pengajuan->id }}">
                         @include('livewire.admin.pengajuan.partials.card', ['pengajuan' => $pengajuan])

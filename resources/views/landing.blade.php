@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         @include('partials.head')
     </head>
@@ -28,28 +28,30 @@
                     </a>
 
                     <div class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
-                    <nav class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
-                    @auth
-                        <flux:button class="w-full justify-center sm:w-auto" variant="outline" :href="route('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:button>
+                        <x-theme-toggle class="w-full justify-center border border-transparent bg-zinc-100/70 sm:w-auto dark:bg-zinc-800/70" />
 
-                        @if (auth()->user()->role === 'alumni')
-                            <flux:button class="w-full justify-center sm:w-auto" variant="primary" :href="route('pengajuan.create')" wire:navigate>{{ __('Ajukan Legalisir') }}</flux:button>
-                        @endif
+                        <nav class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
+                            @auth
+                                <flux:button class="w-full justify-center sm:w-auto" variant="outline" :href="route('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:button>
 
-                        @if (in_array(auth()->user()->role, ['staf', 'dekan'], true))
-                            <flux:button class="w-full justify-center sm:w-auto" variant="primary" :href="route('admin.pengajuan.index')" wire:navigate>{{ __('Manajemen Pengajuan') }}</flux:button>
-                        @endif
+                                @if (auth()->user()->role === 'alumni')
+                                    <flux:button class="w-full justify-center sm:w-auto" variant="primary" :href="route('pengajuan.create')" wire:navigate>{{ __('Ajukan Legalisir') }}</flux:button>
+                                @endif
 
-                        @if (auth()->user()->role === 'superadmin')
-                            <flux:button class="w-full justify-center sm:w-auto" variant="primary" :href="route('superadmin.dashboard')" wire:navigate>{{ __('Dashboard Superadmin') }}</flux:button>
-                        @endif
-                    @else
-                        <flux:button class="w-full justify-center sm:w-auto" variant="outline" :href="route('login')" wire:navigate>{{ __('Log in') }}</flux:button>
-                        @if (Route::has('register'))
-                            <flux:button class="w-full justify-center sm:w-auto" variant="primary" :href="route('register')" wire:navigate>{{ __('Register') }}</flux:button>
-                        @endif
-                    @endauth
-                </nav>
+                                @if (in_array(auth()->user()->role, ['staf', 'dekan'], true))
+                                    <flux:button class="w-full justify-center sm:w-auto" variant="primary" :href="route('admin.pengajuan.index')" wire:navigate>{{ __('Manajemen Pengajuan') }}</flux:button>
+                                @endif
+
+                                @if (auth()->user()->role === 'superadmin')
+                                    <flux:button class="w-full justify-center sm:w-auto" variant="primary" :href="route('superadmin.dashboard')" wire:navigate>{{ __('Dashboard Superadmin') }}</flux:button>
+                                @endif
+                            @else
+                                <flux:button class="w-full justify-center sm:w-auto" variant="outline" :href="route('login')" wire:navigate>{{ __('Log in') }}</flux:button>
+                                @if (Route::has('register'))
+                                    <flux:button class="w-full justify-center sm:w-auto" variant="primary" :href="route('register')" wire:navigate>{{ __('Register') }}</flux:button>
+                                @endif
+                            @endauth
+                        </nav>
                     </div>
                 </div>
             </header>

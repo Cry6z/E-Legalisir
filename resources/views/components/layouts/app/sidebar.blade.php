@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         @include('partials.head')
     </head>
@@ -20,6 +20,8 @@
                     </a>
 
                     <div class="flex flex-wrap items-center gap-3 text-sm">
+                        <x-theme-toggle class="border border-transparent bg-zinc-100/70 dark:bg-zinc-800/70" />
+
                         <span class="text-zinc-500 dark:text-zinc-300">{{ auth()->user()->name }}</span>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -87,6 +89,20 @@
                     </flux:navlist.item>
                 </flux:navlist>
 
+                <div class="mt-4 hidden lg:block">
+                    <div class="rounded-2xl border border-zinc-200/70 bg-white/70 p-3 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/60">
+                        <div class="flex items-center justify-between gap-3">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500">{{ __('Mode Tampilan') }}</p>
+                                <p class="text-sm font-semibold text-zinc-800 dark:hidden">{{ __('Mode Terang') }}</p>
+                                <p class="hidden text-sm font-semibold text-zinc-100 dark:block">{{ __('Mode Gelap') }}</p>
+                            </div>
+
+                            <x-theme-toggle class="border border-zinc-200/60 bg-white/80 shadow-sm transition hover:scale-[1.02] dark:border-zinc-700 dark:bg-zinc-800/80" />
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Desktop User Menu -->
                 <flux:dropdown class="hidden lg:block" position="bottom" align="start">
                     <flux:profile
@@ -138,6 +154,11 @@
                 <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
 
                 <flux:spacer />
+
+                <div class="flex items-center gap-2 rounded-2xl border border-zinc-200/70 bg-white/70 px-3 py-1.5 text-xs text-zinc-500 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/70 dark:text-zinc-300">
+                    <span class="tracking-[0.2em] uppercase">{{ __('Mode') }}</span>
+                    <x-theme-toggle class="border border-transparent bg-transparent p-1 hover:bg-zinc-100/70 dark:hover:bg-zinc-800/70" />
+                </div>
 
                 <flux:dropdown position="top" align="end">
                     <flux:profile
